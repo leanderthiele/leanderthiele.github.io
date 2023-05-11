@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+set -u -e -o pipefail
+
+template='template.html'
+indir='src'
+
+pages=(
+       'Home@index.html'
+       'CV@cv.html'
+       'Codes@code.html'
+      )
+
+# these are html snippets which we have to copy into the above files
+inputs=(
+        'publications_split@publications_split.src.html'
+       )
+
+function replace_tag {
+  file="$1"
+  tag="$2"
+  replacement="$3"
+  if [ -e "$replacement" ]; then
+    # case in which it is a file
+    sed -i -e "/#${tag}#/{r "$replacement"" -e 'd}' "$file"
+  else
+    sed -i "s@#${tag}#@${replacement}@g" "$file"
+  fi
+  return 0
+}
+
+for page in "${pages[@]}"; do
+  title="$(echo "$page" | cut -f1 -d'@')"
+  out_fname="$(echo "$page" | cut -f2 -d'@')"
+
+  src_fname="$indir"'/'"${out_fname%%'.html'}.src.html"
+  out_fname="$out_fname"
+
+  cp "$indir"'/'"$template" "$out_fname"
+
+  replace_tag "$out_fname" 'title' "$title"
+  replace_tag "$out_fname" 'body' "$src_fname"
+
+  for page1 in "${pages[@]}"; do
+    title1="$(echo "$page1" | cut -f1 -d'@')"
+    link_file="$(echo "$page1" | cut -f2 -d'@')"
+    if [ "$title" == "$title1" ]; then
+      # putting this span in here is useful because it allows treatment like links
+      replace_tag "$out_fname" "$title1" "<span class=\'current\'>"$title"</span>"
+    else
+      replace_tag "$out_fname" "$title1" '<a href='"$link_file"'>'"$title1"'</a>'
+    fi
+  done
+
+  for input in ${inputs[@]}; do
+    tag="$(echo "$input" | cut -f1 -d'@')"
+    inputfile="$indir"'/'"$(echo "$input" | cut -f2 -d'@')"
+    replace_tag "$out_fname" "$tag" "$inputfile"
+  done
+done

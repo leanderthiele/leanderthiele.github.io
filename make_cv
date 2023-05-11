@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -e -u -o pipefail
+
+indir='tex'
+outdir='data'
+tmpdir='tmp'
+
+infile='cv'
+
+cd "$indir"
+pdflatex --output-directory="$OLDPWD"'/'"$tmpdir" "$infile"
+cd "-"
+mv "$tmpdir"'/'"$infile"'.pdf' "$outdir"

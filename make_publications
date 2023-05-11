@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+set -u -e
+
+infile='tex/publications.tex'
+tmpdir='tmp'
+outfile='src/publications.src.html'
+outfile_split='src/publications_split.src.html'
+
+tmpfile="$tmpdir"'/'"$(basename "$infile")"
+
+cp "$infile" "$tmpfile"
+
+function replace_tag {
+  file="$1"
+  tag="$2"
+  replacement="$3"
+  sed -i "s@${tag}@${replacement}@g" "$file"
+  return 0
+}
+
+# sanitize a little bit
+replace_tag "$tmpfile" '\\mbox' ''
+replace_tag "$tmpfile" '\\\\' ''
+
+pandoc "$tmpfile" > "$outfile"
+
+# make it a list
+sed -i '1s/^/<ol>\n/' "$outfile"
+echo '</ol>' >> "$outfile"
+replace_tag "$outfile" '<p>' '<li>'
+replace_tag "$outfile" '</p>' '</li>'
+
+# remove spurious span
+replace_tag "$outfile" '<span>' ''
+replace_tag "$outfile" '</span>' ''
+
+# remove the code environment around arxiv
+replace_tag "$outfile" '<code>arXiv' 'arXiv'
+replace_tag "$outfile" ']<code></a>' ']</a>'
+
+# insert linebreaks (this is hacky)
+replace_tag "$outfile" ', <em>' ',<br><em>'
+replace_tag "$outfile" '</em>, 2' '</em>,<br>2'
+
+# insert class for paper titles
+replace_tag "$outfile" '<em>' '<em class="paper">'
+
+
+# filter according to authorship
+function filter {
+  file="$1"
+  min="$2"
+  max="$3"
+
+  my_name='<strong>L. Thiele</strong>'
+
+  while IFS='' read -r line || [ -n "$line" ]; do
+
+    # case no item
+    if [[ "$line" != '<li>'* ]]; then
+      echo "$line"
+      continue
+    fi
+
+    # count number of author separators before my name
+    leading="${line%%"$my_name"*}"
+    num_names="$(echo "$leading" | grep -o ', ' | wc -l)"
+    if [ $num_names -ge $min ] && [ $num_names -le $max ]; then
+      echo "$line"
+    fi
+
+  done < "$file"
+}
+
+groups=(
+        '1st author@0 0@1'
+        '2nd &amp 3rd author@1 2@23'
+        'Nth author@3 1000@N'
+       )
+
+rm -f "$outfile_split"
+for group in "${groups[@]}"; do
+  title="$(echo "$group" | cut -f1 -d'@')"
+  minmax="$(echo "$group" | cut -f2 -d'@')"
+  ident="$(echo "$group" | cut -f3 -d'@')"
+  echo '<h3>'"$title"'</h3>' >> "$outfile_split"
+  filter "$outfile" $minmax >> "$outfile_split"
+done
