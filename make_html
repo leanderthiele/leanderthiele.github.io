@@ -7,6 +7,7 @@ set -u -e -o pipefail
 
 template='template.html'
 indir='src'
+outdir='docs'
 
 target="$1"
 
@@ -43,7 +44,7 @@ for page in "${pages[@]}"; do
   fi
 
   src_fname="$indir"'/'"${out_fname%%'.html'}.src.html"
-  out_fname="$out_fname"
+  out_fname="$outdir"'/'"$out_fname"
 
   cp "$indir"'/'"$template" "$out_fname"
 
