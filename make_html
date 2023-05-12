@@ -58,7 +58,7 @@ for page in "${pages[@]}"; do
       # putting this span in here is useful because it allows treatment like links
       replace_tag "$out_fname" "$title1" "<span class=\'current\'>"$title"</span>"
     else
-      replace_tag "$out_fname" "$title1" '<a href='"$link_file"'>'"$title1"'</a>'
+      replace_tag "$out_fname" "$title1" '<a href='"\"$link_file\""'>'"$title1"'</a>'
     fi
   done
 
