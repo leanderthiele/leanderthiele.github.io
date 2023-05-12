@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+# Command line args:
+#     [1] the file to generate
+
 set -u -e -o pipefail
 
 template='template.html'
 indir='src'
+
+target="$1"
 
 pages=(
        'Home@index.html'
@@ -32,6 +37,10 @@ function replace_tag {
 for page in "${pages[@]}"; do
   title="$(echo "$page" | cut -f1 -d'@')"
   out_fname="$(echo "$page" | cut -f2 -d'@')"
+
+  if [ "$target" != "$out_fname" ]; then
+    continue
+  fi
 
   src_fname="$indir"'/'"${out_fname%%'.html'}.src.html"
   out_fname="$out_fname"

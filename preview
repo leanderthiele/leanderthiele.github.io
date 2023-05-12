@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+page='index.html'
+
+/usr/bin/env firefox --new-window "$page" &
