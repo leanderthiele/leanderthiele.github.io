@@ -5,7 +5,7 @@
 
 /* General layout */
 body {
-	max-width: 800px;
+	max-width: 50em;
 	margin: 0 auto;
 
 	background-color: #252525;
@@ -43,14 +43,14 @@ a:visited {
 
 /* navigation bar generally */
 .navbar {
-	max-width: 800px;
+	max-width: 50em;
 	width: 100%;
 	overflow: hidden;
 	background-color: #3f3f3f;
 	position: fixed;
 	top: 0;
-	font-size: x-large;
-	font-weight: normal;
+	font-size: large;
+	font-weight: 600;
 }
 
 /* navigation bar buttons */
@@ -62,10 +62,12 @@ a:visited {
 	text-decoration: none;
 }
 
-/* my name */
-.name {
-	text-align: right;
-	font-style: italic;
+/* navigation bar my name */
+.navbar .name {
+	float: right;
+	display: block;
+	text-align: left;
+	padding: 5px 8px;
 	font-weight: normal;
 }
 
