@@ -29,11 +29,11 @@ a:link {
 
 a:visited {
 	color: #50c050;
-  text-decoration: none;
+ 	text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
+  	text-decoration: underline;
 }
 
 /* paper titles */
@@ -42,8 +42,14 @@ a:hover {
 }
 
 /* author names in publications */
-.authorname {
+.publist .authorname {
 	white-space: nowrap;
+}
+
+/* my name in publications */
+.publist .myname {
+	white-space: nowrap;
+	font-weight: bold;
 }
 
 /* my photo on the home page */

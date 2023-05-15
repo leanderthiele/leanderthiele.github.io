@@ -7,6 +7,8 @@ tmpdir='tmp'
 outfile='src/publications.src.html'
 outfile_split='src/publications_split.src.html'
 
+my_name='<span class="myname">L. Thiele</span>'
+
 tmpfile="$tmpdir"'/'"$(basename "$infile")"
 
 cp "$infile" "$tmpfile"
@@ -51,6 +53,9 @@ replace_tag "$outfile" '<em>' '<em class="paper">'
 # then a comma
 sed -i 's@\([^\,^<^>^0-9]\+\)\,@ <span class="authorname">\1</span>,@g' "$outfile"
 
+# special treatment for me
+replace_tag "$outfile" '<strong>L. Thiele</strong>' "$my_name"
+
 # surround by list environment
 sed -i '1s/^/<ol class="publist">\n/' "$outfile"
 echo '</ol>' >> "$outfile"
@@ -62,8 +67,6 @@ function filter {
   file="$1"
   min="$2"
   max="$3"
-
-  my_name='<strong>L. Thiele</strong>'
 
   while IFS='' read -r line || [ -n "$line" ]; do
 
