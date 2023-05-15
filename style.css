@@ -9,7 +9,7 @@ body {
 	max-width: var(--width);
 	margin: 0 auto;
 
-	background-color: #252525;
+	background-color: #252525 !important;
 	color: var(--text-color);
 
 	font-family: "Open Sans", Arial, sans-serif;
