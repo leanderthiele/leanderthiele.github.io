@@ -64,7 +64,6 @@ a:visited {
 
 /* my name */
 .name {
-	text-align: right;
 	font-style: italic;
 	font-weight: normal;
 }
