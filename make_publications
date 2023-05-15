@@ -25,13 +25,13 @@ replace_tag "$tmpfile" '\\\\' ''
 
 pandoc "$tmpfile" > "$outfile"
 
-# make it a list
-sed -i '1s/^/<ol>\n/' "$outfile"
-echo '</ol>' >> "$outfile"
+# ---  make it nice (these are all pretty hacky) ---
+
+# list items (environmnt inserted below)
 replace_tag "$outfile" '<p>' '<li>'
 replace_tag "$outfile" '</p>' '</li>'
 
-# remove spurious span
+# remove spurious span around my name
 replace_tag "$outfile" '<span>' ''
 replace_tag "$outfile" '</span>' ''
 
@@ -39,12 +39,17 @@ replace_tag "$outfile" '</span>' ''
 replace_tag "$outfile" '<code>arXiv' 'arXiv'
 replace_tag "$outfile" ']<code></a>' ']</a>'
 
-# insert linebreaks (this is hacky)
+# insert linebreaks before & after title
 replace_tag "$outfile" ', <em>' ',<br><em>'
 replace_tag "$outfile" '</em>, 2' '</em>,<br>2'
 
 # insert class for paper titles
 replace_tag "$outfile" '<em>' '<em class="paper">'
+
+# surround by list environment
+sed -i '1s/^/<ol>\n/' "$outfile"
+echo '</ol>' >> "$outfile"
+
 
 
 # filter according to authorship

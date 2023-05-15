@@ -1,11 +1,12 @@
 :root {
 	--text-color: #ebebde;
 	--hi-color: #ffc080;
+  --width: 900px;
 }
 
 /* General layout */
 body {
-	max-width: 900px;
+	max-width: var(--width);
 	margin: 0 auto;
 
 	background-color: #252525;
@@ -23,10 +24,16 @@ body {
 /* links */
 a:link {
 	color: #00d0d0;
+  text-decoration: none;
 }
 
 a:visited {
 	color: #50c050;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 /* paper titles */
@@ -43,7 +50,7 @@ a:visited {
 
 /* navigation bar generally */
 .navbar {
-	max-width: 900px;
+	max-width: var(--width);
 	width: 100%;
 	overflow: hidden;
 	background-color: #3f3f3f;
