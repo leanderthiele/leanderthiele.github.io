@@ -1,7 +1,7 @@
 :root {
 	--text-color: #ebebde;
 	--hi-color: #ffc080;
-  --width: 900px;
+  	--width: 55rem;
 }
 
 /* General layout */
@@ -12,7 +12,7 @@ body {
 	background-color: #252525 !important;
 	color: var(--text-color);
 
-	font-family: "Open Sans", Arial, sans-serif;
+	font-family: 'Open Sans', Arial, sans-serif;
 	font-size: large;
 }
 
@@ -24,11 +24,12 @@ body {
 /* links */
 a:link {
 	color: #00d0d0;
-  text-decoration: none;
+	text-decoration: none;
 }
 
 a:visited {
-	color: #50c050;
+	/*color: #50c050;*/
+	color: #00d0d0;
  	text-decoration: none;
 }
 
@@ -54,9 +55,9 @@ a:hover {
 
 /* my photo on the home page */
 #photo {
-	max-width: 25%;
+	max-width: 14rem;
 	float: right;
-	margin: 0 0 5% 5%;
+	margin: 0 0 3rem 3rem;
 }
 
 /* navigation bar generally */
