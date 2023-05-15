@@ -46,8 +46,13 @@ replace_tag "$outfile" '</em>, 2' '</em>,<br>2'
 # insert class for paper titles
 replace_tag "$outfile" '<em>' '<em class="paper">'
 
+# make names not break
+# we identify names by containing only letters and dots,
+# then a comma
+sed -i 's@\([^\,^<^>^0-9]\+\)\,@ <span class="authorname">\1</span>,@g' "$outfile"
+
 # surround by list environment
-sed -i '1s/^/<ol>\n/' "$outfile"
+sed -i '1s/^/<ol class="publist">\n/' "$outfile"
 echo '</ol>' >> "$outfile"
 
 

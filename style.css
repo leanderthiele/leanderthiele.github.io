@@ -41,6 +41,11 @@ a:hover {
 	color: var(--hi-color);
 }
 
+/* author names in publications */
+.authorname {
+	white-space: nowrap;
+}
+
 /* my photo on the home page */
 #photo {
 	max-width: 25%;
@@ -70,7 +75,7 @@ a:hover {
 }
 
 /* navigation bar my name */
-.navbar .name {
+.navbar .myname {
 	float: right;
 	display: block;
 	text-align: left;
