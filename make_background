@@ -48,12 +48,13 @@ def to_img (fname, bg, targ, log=True) :
     f /= np.max(f)
     # remove alpha channel for size
     f = cmap(bg, targ)(f, bytes=True)[..., :3]
-    return Image.fromarray(f, 'RGB')
+    im = Image.fromarray(f, 'RGB')
+    im = im.resize((196,196))
+    return im
 
 im1 = to_img(F1, BACKGROUND, C1)
 im2 = to_img(F2, BACKGROUND, C2)
-
 im = Image.blend(im1, im2, alpha=0.2)
 
 # in order to save bandwidth, set quality very low here
-im.save('data/bg.jpg', optimize=True, quality=15)
+im.save('data/bg.jpg', optimize=True, quality=90)

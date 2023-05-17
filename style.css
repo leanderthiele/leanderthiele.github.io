@@ -24,7 +24,7 @@ body {
 	background-repeat: repeat; /* image is periodic */
 	background-image:
 	url('data/bg.jpg');
-	background-size: 100rem; /* use to have more control over resolution */
+	background-size: 30rem; /* use to have more control over resolution */
 
 }
 
