@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+
+from PIL import Image
+import numpy as np
+from matplotlib import cm
+from matplotlib.colors import LinearSegmentedColormap
+from textwrap import wrap
+
+F1 = 'data/TNG300_projected_PE.npy'
+F2 = 'data/TNG300_projected_DM.npy'
+
+BACKGROUND = '252525'
+C1 = 'ffc080'
+C2 = '00d0d0'
+
+# return tuple of 0-1 normalized floats
+def rgb (x) :
+    return list(map(lambda a: int(a, base=16)/255, wrap(x, 2)))
+
+# generate a monochromatic color map, where 0 is the background color
+# and 1 the target color
+def cmap (bg, targ) :
+    bg = rgb(bg)
+    targ = rgb(targ)
+    return LinearSegmentedColormap(
+               'mymap',
+               {
+                'red': [
+                        (0, bg[0], bg[0]),
+                        (1, targ[0], targ[0]),
+                       ],
+                'green': [
+                          (0, bg[1], bg[1]),
+                          (1, targ[1], targ[1]),
+                         ],
+                'blue': [
+                         (0, bg[2], bg[2]),
+                         (1, targ[2], targ[2]),
+                        ],
+               }
+            )
+
+def to_img (fname, bg, targ, log=True) :
+    f = np.load(fname)
+    if log :
+        f = np.log(f)
+    f -= np.min(f)
+    f /= np.max(f)
+    # remove alpha channel for size
+    f = cmap(bg, targ)(f, bytes=True)[..., :3]
+    return Image.fromarray(f, 'RGB')
+
+im1 = to_img(F1, BACKGROUND, C1)
+im2 = to_img(F2, BACKGROUND, C2)
+
+im = Image.blend(im1, im2, alpha=0.2)
+
+# in order to save bandwidth, set quality very low here
+im.save('data/bg.jpg', optimize=True, quality=15)
