@@ -2,6 +2,7 @@
 	--bg-color: #252525;
 	--text-color: #ebebde;
 	--hi-color: #ffc080;
+	--link-color: #00d0d0;
   	--width: 60rem;
 }
 
@@ -22,8 +23,7 @@ body {
 	overflow: hidden;
 	z-index: -100;
 	background-repeat: repeat; /* image is periodic */
-	background-image:
-	url('data/bg.jpg');
+	background-image: url('data/bg.jpg');
 	background-size: 30rem; /* use to have more control over resolution */
 
 }
@@ -93,13 +93,13 @@ body {
 
 /* links */
 a:link {
-	color: #00d0d0;
+	color: var(--link-color);
 	text-decoration: none;
 }
 
 a:visited {
 	/*color: #50c050;*/
-	color: #00d0d0;
+	color: var(--link-color);
  	text-decoration: none;
 }
 
@@ -152,6 +152,11 @@ a:hover {
 /* highlighting of navigation bar links */
 .navbar a {
 	color: var(--hi-color);
+}
+
+/* hovering over navigation bar links */
+.navbar a:hover {
+	box-shadow: 0px -2px 0px var(--hi-color) inset;
 }
 
 /* major headings get a line below */
