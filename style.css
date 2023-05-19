@@ -39,7 +39,7 @@ body {
 }
 
 .background {
-	opacity: 50%;
+	opacity: 30%;
 	top: 0;
 	left: 0;
 	right: 0;
@@ -85,14 +85,18 @@ body {
 }
 
 .left {
+	/*
 	background: linear-gradient(to right,
                                     var(--gradient)
                                    );
+	*/
 }
 .right {
+	/*
 	background: linear-gradient(to left,
                                     var(--gradient)
                                    );
+	*/
 }
 
 /* navigation bar */
