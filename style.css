@@ -4,6 +4,31 @@
 	--hi-color: #ffc080;
 	--link-color: #00d0d0;
   	--width: 60rem;
+	--gradient: 
+                    /* stripy gradient */
+		/*
+		    rgba(37,37,37,1.0) 0%,
+		    rgba(37,37,37,0.8) 30%,
+		    rgba(37,37,37,0.0) 50%,
+		    rgba(37,37,37,0.8) 70%,
+		    rgba(37,37,37,1.0) 100%
+		*/
+                    
+		    /* one-sided gradient */
+		/*
+                    rgba(0,0,0,0) 0%,
+		    rgba(37,37,37,0.5) 30%,
+		    rgba(37,37,37,0.8) 60%,
+		    rgba(37,37,37,0.9) 80%,
+		    rgba(37,37,37,1.0) 100%
+		*/
+
+		    /* steeper version */
+                    rgba(0,0,0,0) 0%,
+		    rgba(37,37,37,0.5) 20%,
+		    rgba(37,37,37,0.8) 50%,
+		    rgba(37,37,37,0.9) 70%,
+		    rgba(37,37,37,1.0) 100%
 }
 
 /* General layout */
@@ -61,20 +86,12 @@ body {
 
 .left {
 	background: linear-gradient(to right,
-                                    rgba(0,0,0,0) 0%,
-				    rgba(37,37,37,0.5) 30%,
-				    rgba(37,37,37,0.8) 60%,
-				    rgba(37,37,37,0.9) 80%,
-		                    var(--bg-color) 100%
+                                    var(--gradient)
                                    );
 }
 .right {
 	background: linear-gradient(to left,
-                                    rgba(0,0,0,0) 0%,
-				    rgba(37,37,37,0.5) 30%,
-				    rgba(37,37,37,0.8) 60%,
-				    rgba(37,37,37,0.9) 80%,
-		                    var(--bg-color) 100%
+                                    var(--gradient)
                                    );
 }
 
