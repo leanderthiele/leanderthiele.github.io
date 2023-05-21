@@ -95,6 +95,7 @@ a:hover {
 /* paper titles */
 .paper {
 	color: var(--hi-color);
+	font-style: italic;
 }
 
 /* author names in publications */
@@ -106,6 +107,13 @@ a:hover {
 .publist .myname {
 	white-space: nowrap;
 	font-weight: bold;
+}
+
+/* schools */
+.school {
+	color: var(--hi-color);
+	font-style: italic;
+	font-weight: normal;
 }
 
 /* my photo on the home page */
@@ -146,6 +154,7 @@ a:hover {
 
 /* major headings get a line below */
 h2 {
-	font-weight: 600;
-	border-bottom: 1px solid #a0a0a0;
+	font-weight: 300;
+	color: var(--hi-color);
+	border-bottom: 1px solid /*#a0a0a0*/ var(--hi-color);
 }
