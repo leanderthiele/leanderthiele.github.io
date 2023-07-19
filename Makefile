@@ -1,7 +1,7 @@
 all: index.html cv.html code.html data/cv.pdf data/bg.jpg
 
 data/cv.pdf: tex/cv.tex tex/publications.tex tex/res.cls make_cv
-	./make_cv
+	./make_cv ''
 
 src/publications.src.html src/publications_split.src.html: tex/publications.tex make_publications
 	./make_publications

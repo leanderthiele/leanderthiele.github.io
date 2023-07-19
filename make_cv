@@ -2,13 +2,16 @@
 
 set -e -u -o pipefail
 
+suffix="$1"
+
 indir='tex'
 outdir='data'
 tmpdir='tmp'
 
-infile='cv'
+infile='cv'"$suffix"
 
 cd "$indir"
+pdflatex --output-directory="$OLDPWD"'/'"$tmpdir" "$infile"
 pdflatex --output-directory="$OLDPWD"'/'"$tmpdir" "$infile"
 cd "-"
 mv "$tmpdir"'/'"$infile"'.pdf' "$outdir"
