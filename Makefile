@@ -1,4 +1,4 @@
-all: index.html cv.html code.html data/cv.pdf data/bg.jpg
+all: data/cv.pdf data/bg.jpg index.html cv.html code.html
 
 data/cv.pdf: tex/cv.tex tex/publications.tex tex/res.cls make_cv
 	./make_cv ''
@@ -20,8 +20,8 @@ data/bg.jpg: data/TNG300_projected_DM.npy data/TNG300_projected_PE.npy make_back
 
 .PHONY: clean
 clean:
-	rm tmp/*
-	rm docs/index.html docs/cv.html docs/code.html
+	rm -f tmp/*
+	rm ./index.html ./cv.html ./code.html
 	rm src/publications*.src.html
 	rm data/cv.pdf
 	rm data/bg.jpg
