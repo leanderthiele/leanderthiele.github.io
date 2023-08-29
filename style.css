@@ -115,10 +115,12 @@ a:hover {
 }
 
 .talkstable td.date {
+	text-align: right;
 	font-family: 'monospace';
 }
 
 .talkstable td.talk {
+	text-align: left;
 	padding: 0 0 0 2rem;
 }
 
