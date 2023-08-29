@@ -19,6 +19,7 @@ pages=(
 # these are html snippets which we have to copy into the above files
 inputs=(
         'publications_split@publications_split.src.html'
+        'talks@talks.src.html'
        )
 
 function replace_tag {

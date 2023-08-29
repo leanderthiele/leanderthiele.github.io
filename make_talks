@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -u -e
+
+infile='tex/talks.tex'
+tmpdir='tmp'
+outfile='src/talks.src.html'
+
+tmpfile="$tmpdir"'/'"$(basename "$infile")"
+
+cp "$infile" "$tmpfile"
+
+function replace_tag {
+  file="$1"
+  tag="$2"
+  replacement="$3"
+  sed -i "s@${tag}@${replacement}@g" "$file"
+  return 0
+}
+
+pandoc "$tmpfile" > "$outfile"
+
+replace_tag "$outfile" '<table>' '<table class="talkstable">'
+replace_tag "$outfile" '<td style="text-align: right;">' '<td class="date" style="text-align: right;">'
+replace_tag "$outfile" '<td style="text-align: left;">' '<td class="talk" style="text-align: left;">'

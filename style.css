@@ -109,6 +109,22 @@ a:hover {
 	font-weight: bold;
 }
 
+/* talks table */
+.talkstable {
+	table-layout: fixed;
+}
+
+.talkstable td.date {
+	font-family: 'monospace';
+}
+
+.talkstable td.talk {
+	padding: 0 0 0 2rem;
+}
+
+.talkstable tr.even {
+}
+
 /* schools */
 .school {
 	color: var(--hi-color);
