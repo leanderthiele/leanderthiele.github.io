@@ -1,6 +1,6 @@
 all: data/cv.pdf data/bg.jpg index.html cv.html code.html
 
-data/cv.pdf: tex/cv.tex tex/publications.tex tex/res.cls make_cv
+data/cv.pdf: tex/cv.tex tex/publications.tex tex/talks.tex tex/res.cls make_cv
 	./make_cv ''
 
 src/publications.src.html src/publications_split.src.html: tex/publications.tex make_publications
@@ -26,5 +26,6 @@ clean:
 	rm -f tmp/*
 	rm ./index.html ./cv.html ./code.html
 	rm src/publications*.src.html
+	rm src/talks.src.html
 	rm data/cv.pdf
 	rm data/bg.jpg
