@@ -7,7 +7,7 @@ tmpdir='tmp'
 outfile='src/publications.src.html'
 outfile_split='src/publications_split.src.html'
 
-my_name='<span class="myname">L. Thiele</span>'
+my_name='<span class="myname"> L. Thiele</span>'
 
 tmpfile="$tmpdir"'/'"$(basename "$infile")"
 
@@ -25,7 +25,8 @@ function replace_tag {
 replace_tag "$tmpfile" '\\mbox' ''
 replace_tag "$tmpfile" '\\\\' ''
 
-pandoc "$tmpfile" > "$outfile"
+# it is important we do not insert line breaks within publications!
+pandoc --wrap=none "$tmpfile" > "$outfile"
 
 # ---  make it nice (these are all pretty hacky) ---
 
@@ -59,7 +60,6 @@ replace_tag "$outfile" '<strong>L. Thiele</strong>' "$my_name"
 # surround by list environment
 sed -i '1s/^/<ol class="publist">\n/' "$outfile"
 echo '</ol>' >> "$outfile"
-
 
 
 # filter according to authorship
