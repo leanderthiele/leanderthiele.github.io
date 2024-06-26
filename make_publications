@@ -17,7 +17,7 @@ function replace_tag {
   file="$1"
   tag="$2"
   replacement="$3"
-  sed -i "s@${tag}@${replacement}@g" "$file"
+  gsed -i "s@${tag}@${replacement}@g" "$file"
   return 0
 }
 
@@ -52,13 +52,13 @@ replace_tag "$outfile" '<em>' '<em class="paper">'
 # make names not break
 # we identify names by containing only letters and dots,
 # then a comma
-sed -i 's@\([^\,^<^>^0-9]\+\)\,@ <span class="authorname">\1</span>,@g' "$outfile"
+gsed -i 's@\([^\,^<^>^0-9]\+\)\,@ <span class="authorname">\1</span>,@g' "$outfile"
 
 # special treatment for me
 replace_tag "$outfile" '<strong>L. Thiele</strong>' "$my_name"
 
 # surround by list environment
-sed -i '1s/^/<ol class="publist">\n/' "$outfile"
+gsed -i '1s/^/<ol class="publist">\n/' "$outfile"
 echo '</ol>' >> "$outfile"
 
 
