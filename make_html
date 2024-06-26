@@ -28,9 +28,9 @@ function replace_tag {
   replacement="$3"
   if [ -e "$replacement" ]; then
     # case in which it is a file
-    gsed -i -e "/#${tag}#/{r "$replacement"" -e 'd}' "$file"
+    sed -i -e "/#${tag}#/{r "$replacement"" -e 'd}' "$file"
   else
-    gsed -i "s@#${tag}#@${replacement}@g" "$file"
+    sed -i "s@#${tag}#@${replacement}@g" "$file"
   fi
   return 0
 }

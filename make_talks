@@ -14,7 +14,7 @@ function replace_tag {
   file="$1"
   tag="$2"
   replacement="$3"
-  gsed -i "s@${tag}@${replacement}@g" "$file"
+  sed -i "s@${tag}@${replacement}@g" "$file"
   return 0
 }
 
