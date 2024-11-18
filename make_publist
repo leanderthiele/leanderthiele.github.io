@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+set -x -e -u -o pipefail
+
+function replace_tag {
+  file="$1"
+  tag="$2"
+  replacement="$3"
+  if [ -e "$replacement" ]; then
+    # case in which it is a file
+    sed -i -e "/${tag}/{r "$replacement"" -e 'd}' "$file"
+  else
+    sed -i "s@${tag}@${replacement}@g" "$file"
+  fi
+  return 0
+}
+
+function delete_line {
+  file="$1"
+  tag="$2"
+  sed -i "/${tag}/d" "$file"
+  return 0
+}
+
+suffix="$1"
+
+indir='tex'
+outdir='data'
+tmpdir='tmp'
+
+cd "$indir"
+
+cp 'publist.tex' 'tmppublist.tex'
+replace_tag 'tmppublist.tex' 'PUBLICATIONS' 'publications.tex'
+delete_line 'tmppublist.tex' 'newpage'
+delete_line 'tmppublist.tex' 'vspace'
+replace_tag 'tmppublist.tex' '\\\\' ''
+
+pdflatex --output-directory="$OLDPWD"'/'"$tmpdir" 'tmppublist'
+pdflatex --output-directory="$OLDPWD"'/'"$tmpdir" 'tmppublist'
+
+rm 'tmppublist.tex'
+
+cd "-"
+mv "$tmpdir"'/tmppublist.pdf' "$outdir"'/publist.pdf'

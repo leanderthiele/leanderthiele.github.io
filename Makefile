@@ -1,7 +1,10 @@
-all: data/cv.pdf data/bg.jpg index.html cv.html code.html
+all: data/cv.pdf data/publist.pdf data/bg.jpg index.html cv.html code.html
 
 data/cv.pdf: tex/cv.tex tex/publications.tex tex/talks.tex tex/teaching.tex tex/res.cls make_cv
 	./make_cv ''
+
+data/publist.pdf: tex/publist.tex tex/publications.tex make_publist
+	./make_publist ''
 
 src/publications.src.html src/publications_split.src.html: tex/publications.tex make_publications
 	./make_publications
