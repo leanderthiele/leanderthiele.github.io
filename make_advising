@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -u -e
+
+infile='tex/advising.tex'
+tmpdir='tmp'
+outfile='src/advising.src.html'
+
+tmpfile="$tmpdir"'/'"$(basename "$infile")"
+
+cp "$infile" "$tmpfile"
+
+function replace_tag {
+  file="$1"
+  tag="$2"
+  replacement="$3"
+  sed -i "s@${tag}@${replacement}@g" "$file"
+  return 0
+}
+
+pandoc --wrap=none "$tmpfile" > "$outfile"
+
