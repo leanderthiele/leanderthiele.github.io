@@ -21,6 +21,7 @@ inputs=(
         'publications_split@publications_split.src.html'
         'talks@talks.src.html'
         'teaching@teaching.src.html'
+        'advising@advising.src.html'
        )
 
 function replace_tag {
