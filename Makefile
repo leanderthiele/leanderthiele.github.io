@@ -1,6 +1,6 @@
 all: data/cv.pdf data/publist.pdf data/bg.jpg index.html cv.html code.html
 
-data/cv.pdf: tex/cv.tex tex/publications.tex tex/talks.tex tex/teaching.tex tex/advising.tex tex/res.cls make_cv
+data/cv.pdf: tex/cv.tex tex/publications.tex tex/talks.tex tex/teaching.tex tex/advising.tex tex/funding.tex tex/res.cls make_cv
 	./make_cv ''
 
 data/publist.pdf: tex/publist.tex tex/publications.tex make_publist
@@ -15,13 +15,16 @@ src/talks.src.html: tex/talks.tex make_talks
 src/teaching.src.html: tex/teaching.tex make_teaching
 	./make_teaching
 
+src/funding.src.html: tex/funding.tex make_funding
+	./make_funding
+
 src/advising.src.html: tex/advising.tex make_advising
 	./make_advising
 
 index.html: src/template.html src/index.src.html make_html
 	./make_html 'index.html'
 
-cv.html: src/template.html src/cv.src.html src/publications_split.src.html src/talks.src.html src/teaching.src.html src/advising.src.html make_html
+cv.html: src/template.html src/cv.src.html src/publications_split.src.html src/talks.src.html src/teaching.src.html src/advising.src.html src/funding.src.html make_html
 	./make_html 'cv.html'
 
 code.html: src/template.html src/code.src.html make_html
