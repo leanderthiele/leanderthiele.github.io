@@ -1,30 +1,28 @@
 \documentclass[margin]{res}
-\textwidth=5.2in
-\voffset=-2cm
+% \textwidth=5.2in
+% \voffset=-2cm
 \usepackage[utf8]{inputenc}
 \usepackage{eurosym}
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{hyperref}
+\usepackage{longtable}
 
 %\pagestyle{headings}
 %\markright{\hspace*{-3.3cm}\texttt{Leander F. Thiele, applying to Department of Physics}\hfill}
 
-\hypersetup{colorlinks=false,allbordercolors=Apricot,pdfborderstyle={/S/U/W 1}}
+%\hypersetup{colorlinks=false,allbordercolors=Apricot,pdfborderstyle={/S/U/W 1}}
 
 
 \begin{document} 
 
-\vspace*{0.8cm}
+\name{Leander F. Thiele}
 
-\name{Leander F. Thiele\\[12pt]}
+\address{
+  \href{mailto:leander.thiele@ipmu.jp}{\texttt{leander.thiele@ipmu.jp}}\\
+  \href{https://leanderthiele.github.io}{\texttt{leanderthiele.github.io}}
+}
 
 \begin{resume} 
-
-
-\vspace*{-0.5cm}
-\section{Contact}
-\href{mailto:leander.thiele@ipmu.jp}{\texttt{leander.thiele@ipmu.jp}},
-\href{https://leanderthiele.github.io}{\texttt{leanderthiele.github.io}}
 
 %\section{Research \\ Interests}
 %	\begin{itemize} \itemsep -2pt
@@ -44,48 +42,25 @@
 %	\end{itemize}
 
 \section{Employment}
-  {\bf University of Tokyo}, Project Assistant Professor \hfill 2024 -- present
-  \begin{itemize}
-    \item in the Center for Data-Driven Discovery at Kavli-IPMU
-  \end{itemize}
+{\bf Kavli IPMU, University of Tokyo} \hfill 2024 -- present \\
+Project Assistant Professor (tenure-track) in Center for Data-Driven Discovery (\href{https://cd3.ipmu.jp}{CD3})
 
 \section{Education}
-	{\bf Princeton University,} PhD Physics \hfill 2019 -- 2024
-	\begin{itemize} \itemsep -2pt
-		\item advisor: David N. Spergel
-		\item graduate courses: QFT I, Extragalactic Astronomy,
-		Cosmology, General Relativity, Condensed Matter
-	\end{itemize}
+  {\bf Princeton University,} PhD Physics \hfill 2019 -- 2024 \\
+  advisor: David N. Spergel \\
+  thesis: \emph{Getting ready for new Data: Approaches to some Challenges in Cosmology} \\
+  graduate courses: QFT I, Extragalactic Astronomy, Cosmology, General Relativity, Condensed Matter
 	
-	{\bf Perimeter Institute for Theoretical Physics,} MSc \hfill 2018 -- 2019
-	\begin{itemize} \itemsep -2pt
-		\item advisor: Kendrick M. Smith, co-advisor: J. Colin Hill
-		\item thesis: \emph{Capturing non-Gaussianity: Analytic model for the one-point
-		probability distribution function of cosmological fields within the halo model}
-%		\begin{quote}\footnotesize
-%		A powerful observable for cosmological fields primarily sourced by
-%		massive halos is their one-point probability distribution function.
-%		We present a general model for the one-point PDF, taking into account
-%		previously neglected corrections. Application of the model
-%		to the thermal Sunyaev-Zel’dovich PDF is successfully confirmed by
-%		comparison to simulations. Preliminary results concerning the weak
-%		lensing convergence seem to indicate that our model is in fact more
-%		precise than the simulations.
-%		\end{quote}
-		\item graduate courses: QFT I \& II, Statistical Mechanics, Condensed Matter,
-		Cosmology, General Relativity, Machine Learning
-	\end{itemize}
+  {\bf Perimeter Institute for Theoretical Physics,} MSc \hfill 2018 -- 2019 \\
+  Kendrick M. Smith, co-advisor: J. Colin Hill \\
+	thesis: \emph{Capturing non-Gaussianity: Analytic model for the one-point probability distribution function of cosmological fields within the halo model} \\
+	graduate courses: QFT I \& II, Statistical Mechanics, Condensed Matter, Cosmology, General Relativity, Machine Learning
 
 	{\bf University of Oxford,} Physics, BA First Class \hfill 2015 -- 2018
-	\begin{itemize} \itemsep -2pt
-		\item ranked top of the cohort ($\sim 130$ students) in years 2 and 3
-	\end{itemize}
+  ranked top of the cohort ($\sim 130$ students) in years 2 and 3
 
 \section{Publications}
 \input{publications}
-
-\newpage
-\vspace*{0.5cm}
 
 \section{Academic \\ Honors}
 Kusaka Memorial Prize in Physics (Princeton, 2022, \$3k)\\
@@ -112,12 +87,8 @@ reviewer for ApJ, MNRAS, NeurIPS ML4PS, ICML ML4Astro
 \section{Advising}
 \input{advising}
 
-\newpage
-\vspace*{0.5cm}
-
 \section{Talks}
 \input{talks}
-
 
 \end{resume}
 \end{document}

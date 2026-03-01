@@ -200,8 +200,7 @@
 \ExecuteOptions{overlapped,centered}
 \ProcessOptions\relax
 
-% LFT commented out
-% \nofiles	     % resume's don't need .aux files
+\nofiles	     % resume's don't need .aux files
 
 
 \newtoks\tabular@text		    % holds the current list being processed
@@ -776,7 +775,7 @@
 \topmargin 0pt
 \headheight 0pt
 \headsep 0pt
-\textheight 11in
+\textheight 9in
 \parindent 0pt
 \topmargin 0in
 \oddsidemargin 0pt
@@ -801,5 +800,4 @@
 \end{format}
 
 \let\section\@@section
-
 
