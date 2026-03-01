@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+outfile='tex/citations.tex'
+
+dnow=$(date +%Y-%m-%d)
+
+# check if we need to update (to prevent rate-limit problems)
+if [[ -f "$outfile" ]]; then
+  dthen=$(grep -oP '[0-9]{4}-[0-9]{2}-[0-9]{2}' $outfile)
+  dnow_sec=$(date -d "$dnow" +%s)
+  dthen_sec=$(date -d "$dthen" +%s)
+  diff_days=$(( (dnow_sec - dthen_sec) / 86400 ))
+  if [[ $diff_days<1 ]]; then
+    echo "SKIPPING CITATIONS UPDATE (last updated $dthen)"
+    exit 0
+  fi
+fi
+
+result=$(./scripts/download_citations)
+
+num_citations=$(echo "$result" | cut -d, -f1)
+h_index=$(echo "$result" | cut -d, -f2)
+
+echo "Citations: $num_citations, h-index: $h_index (INSPIRE-HEP, as of $dnow)" > "$outfile"

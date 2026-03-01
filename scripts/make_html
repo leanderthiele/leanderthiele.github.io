@@ -27,6 +27,7 @@ inputs=(
         'teaching@teaching.src.html'
         'advising@advising.src.html'
         'funding@funding.src.html'
+        'citations@citations.src.html'
        )
 
 function replace_tag {

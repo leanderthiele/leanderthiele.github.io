@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+
+"""
+Given an author identified by his/her BAI, this Python3 script counts the number of
+citations and the number of citations excluding self cites in the Inspirehep database
+(https://inspirehep.net/) for each author's paper.
+
+Additionally, it allows saving a snapshot for later detection of new/removed papers and
+change in the number of citations of individual papers
+
+Built on & inspired by https://github.com/efranzin/python
+"""
+
+AUTHOR             = 'L.Thiele.1'
+MAX_NUM_PAPERS     = 1000       #Number of papers requested from INSPIRE-HEP
+SHORT_TITLE_LENGTH = 50         #Shorten long paper titles
+NEED_WRITE_CONFIRM = True       #Whether to ask user for permission to save to disk
+FILENAME           = 'old_biblio.npy'
+
+# Import the modules to open and reading URLs and the JSON encoder
+import urllib.request, json
+import numpy as np
+
+# Open the INSPIRE-HEP profile
+inspirehep_profile = 'https://inspirehep.net/api/literature?sort=mostrecent&size=' + \
+                        str(MAX_NUM_PAPERS) + '&q=a%20' + AUTHOR
+
+# Load the data
+data     = json.loads(urllib.request.urlopen(inspirehep_profile).read())
+num_hits = data['hits']['total']
+
+# Data type to store paper id, beginning of the title, number of citations and number of
+# citations without self-citations
+bibliography_dtype = np.dtype([
+                        ('id',          np.int64),
+                        ('title',       np.str_, SHORT_TITLE_LENGTH),
+                        ('cits',        np.int64),
+                        ('cits_noself', np.int64),
+                    ])
+
+# Fill in information about author's papers from the website response
+biblio = np.zeros(num_hits, dtype = bibliography_dtype)
+
+for i in range(num_hits):
+    biblio[i]['id']          = data['hits']['hits'][i]['id']
+    biblio[i]['title']       = data['hits']['hits'][i]['metadata']['titles'][0]['title']
+    biblio[i]['cits']        = data['hits']['hits'][i]['metadata']['citation_count']
+    biblio[i]['cits_noself'] = data['hits']['hits'][i]['metadata']['citation_count_without_self_citations']
+
+num_citations = sum(biblio['cits'])
+
+c = sorted((c_ for c_ in biblio['cits']), reverse=True)
+h_index = 0
+for i, ci in enumerate(c, start=1) :
+    if ci >= i :
+        h_index = i
+    else :
+        break
+
+print(f'{num_citations},{h_index}')
