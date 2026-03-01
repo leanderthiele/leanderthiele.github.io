@@ -20,3 +20,4 @@ function replace_tag {
 
 pandoc --wrap=none "$tmpfile" > "$outfile"
 
+replace_tag "$outfile" '<table>' '<table class="widetable">'

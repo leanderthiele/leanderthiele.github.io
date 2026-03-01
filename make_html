@@ -18,8 +18,12 @@ pages=(
 
 # these are html snippets which we have to copy into the above files
 inputs=(
+        'employment@employment.src.html'
+        'education@education.src.html'
         'publications_split@publications_split.src.html'
         'talks@talks.src.html'
+        'honors@honors.src.html'
+        'service@service.src.html'
         'teaching@teaching.src.html'
         'advising@advising.src.html'
         'funding@funding.src.html'

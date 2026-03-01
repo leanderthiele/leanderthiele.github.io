@@ -2,9 +2,9 @@
 
 set -u -e
 
-infile='tex/teaching.tex'
+infile='tex/honors.tex'
 tmpdir='tmp'
-outfile='src/teaching.src.html'
+outfile='src/honors.src.html'
 
 tmpfile="$tmpdir"'/'"$(basename "$infile")"
 

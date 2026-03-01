@@ -20,6 +20,4 @@ function replace_tag {
 
 pandoc --wrap=none "$tmpfile" > "$outfile"
 
-replace_tag "$outfile" '<table>' '<table class="talkstable">'
-replace_tag "$outfile" '<td style="text-align: right;">' '<td class="date">'
-replace_tag "$outfile" '<td style="text-align: left;">' '<td class="talk">'
+replace_tag "$outfile" '<table>' '<table class="narrowtable">'

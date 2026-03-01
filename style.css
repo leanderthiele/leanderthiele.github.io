@@ -109,22 +109,17 @@ a:hover {
 	font-weight: bold;
 }
 
-/* talks table */
-.talkstable {
-	table-layout: fixed;
+/* fills the entire width */
+.widetable {
+	table-layout: auto;
+	width: 100%;
+	border-collapse: collapse;
 }
 
-.talkstable td.date {
-	text-align: right;
-	font-family: 'monospace';
-}
-
-.talkstable td.talk {
-	text-align: left;
-	padding: 0 0 0 2rem;
-}
-
-.talkstable tr.even {
+/* does not fill the entire width */
+.narrowtable {
+	table-layout: auto;
+	border-collapse: collapse;
 }
 
 /* schools */

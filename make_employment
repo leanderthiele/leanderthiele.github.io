@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -u -e
+
+infile='tex/employment.tex'
+tmpdir='tmp'
+outfile='src/employment.src.html'
+
+tmpfile="$tmpdir"'/'"$(basename "$infile")"
+
+cp "$infile" "$tmpfile"
+
+function replace_tag {
+  file="$1"
+  tag="$2"
+  replacement="$3"
+  sed -i "s@${tag}@${replacement}@g" "$file"
+  return 0
+}
+
+pandoc --wrap=none "$tmpfile" > "$outfile"
+
+replace_tag "$outfile" '<p>' '<p><table class="widetable"><tbody><td style="text-align: left;">'
+replace_tag "$outfile" ' 20' '</td><td style="text-align: right;">20'
+sed -i "s@\(table.*\)<br />@\1</td></tbody></table>@g" "$outfile"
+replace_tag "$outfile" '<span>' '<span class="school">'
+replace_tag "$outfile" '<strong>' ''
+replace_tag "$outfile" '</strong>' ''

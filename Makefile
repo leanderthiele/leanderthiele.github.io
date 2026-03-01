@@ -1,10 +1,16 @@
 all: data/cv.pdf data/publist.pdf data/bg.jpg index.html cv.html code.html
 
-data/cv.pdf: tex/cv.tex tex/publications.tex tex/talks.tex tex/teaching.tex tex/advising.tex tex/funding.tex tex/res.cls make_cv
+data/cv.pdf: tex/cv.tex tex/employment.tex tex/education.tex tex/publications.tex tex/talks.tex tex/teaching.tex tex/advising.tex tex/service.tex tex/honors.tex tex/funding.tex tex/res.cls make_cv
 	./make_cv ''
 
 data/publist.pdf: tex/publist.tex tex/publications.tex make_publist
 	./make_publist ''
+
+src/employment.src.html: tex/employment.tex make_employment
+	./make_employment
+
+src/education.src.html: tex/education.tex make_education
+	./make_education
 
 src/publications.src.html src/publications_split.src.html: tex/publications.tex make_publications
 	./make_publications
@@ -15,6 +21,12 @@ src/talks.src.html: tex/talks.tex make_talks
 src/teaching.src.html: tex/teaching.tex make_teaching
 	./make_teaching
 
+src/honors.src.html: tex/honors.tex make_honors
+	./make_honors
+
+src/service.src.html: tex/service.tex make_service
+	./make_service
+
 src/funding.src.html: tex/funding.tex make_funding
 	./make_funding
 
@@ -24,7 +36,7 @@ src/advising.src.html: tex/advising.tex make_advising
 index.html: src/template.html src/index.src.html make_html
 	./make_html 'index.html'
 
-cv.html: src/template.html src/cv.src.html src/publications_split.src.html src/talks.src.html src/teaching.src.html src/advising.src.html src/funding.src.html make_html
+cv.html: src/template.html src/cv.src.html src/employment.src.html src/education.src.html src/publications_split.src.html src/talks.src.html src/teaching.src.html src/honors.src.html src/service.src.html src/advising.src.html src/funding.src.html make_html
 	./make_html 'cv.html'
 
 code.html: src/template.html src/code.src.html make_html

@@ -2,9 +2,9 @@
 
 set -u -e
 
-infile='tex/teaching.tex'
+infile='tex/service.tex'
 tmpdir='tmp'
-outfile='src/teaching.src.html'
+outfile='src/service.src.html'
 
 tmpfile="$tmpdir"'/'"$(basename "$infile")"
 
@@ -20,4 +20,3 @@ function replace_tag {
 
 pandoc --wrap=none "$tmpfile" > "$outfile"
 
-replace_tag "$outfile" '<table>' '<table class="widetable">'
