@@ -1,4 +1,4 @@
-all: data/cv.pdf data/publist.pdf data/bg.jpg index.html cv.html code.html teaching1.html
+all: data/cv.pdf data/publist.pdf data/bg.jpg index.html cv.html code.html teaching1.html cosmovis
 
 tex/citations.tex: scripts/make_citations_tex scripts/download_citations ALWAYS
 	./scripts/make_citations_tex
@@ -53,6 +53,13 @@ teaching1.html: src/template.html src/teaching1.src.html scripts/make_html
 
 data/bg.jpg: data/TNG300_projected_DM.npy data/TNG300_projected_PE.npy scripts/make_background
 	./scripts/make_background
+
+.PHONY: cosmovis resources/cosmovis
+
+cosmovis: resources/cosmovis
+
+resources/cosmovis:
+	$(MAKE) -C $@
 
 .PHONY: ALWAYS
 ALWAYS:

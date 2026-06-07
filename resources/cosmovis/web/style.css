@@ -1,0 +1,267 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    background: #ffffff;
+    color: #000000;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+body {
+    padding-top: 220px;  /* matches fixed-bar height */
+}
+
+#controls {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-bottom: 1px solid #000;
+    padding: 16px 24px;
+    z-index: 100;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+#controls h1 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+#controls h1 a {
+    color: #0a3d91;
+    text-decoration: none;
+}
+
+#controls h1 a:hover {
+    text-decoration: underline;
+}
+
+#controls h1 .paper-link {
+    font-size: 13px;
+    font-weight: 400;
+}
+
+#sliders {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px 24px;
+}
+
+.slider-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 90px;
+    align-items: center;
+    gap: 8px;
+}
+
+.slider-row label {
+    font-family: "Latin Modern Math", "STIX Two Math", "Cambria Math", serif;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.slider-row input[type="range"] {
+    width: 100%;
+    accent-color: #0a3d91;  /* matches our blue */
+    cursor: pointer;
+}
+
+.slider-row input[type="number"] {
+    width: 90px;
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+    padding: 2px 4px;
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    /* no up/down spinner arrows */
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.slider-row input[type="number"]::-webkit-inner-spin-button,
+.slider-row input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.slider-row input[type="number"]:focus {
+    outline: 1px solid #0a3d91;
+}
+
+.slider-row label sub,
+.slider-row label sup {
+    font-size: 75%;
+}
+
+#save-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+#memo-name {
+    width: 220px;
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+    padding: 3px 6px;
+    font: inherit;
+}
+
+#memo-name:focus {
+    outline: 1px solid #0a3d91;
+}
+
+#save-btn {
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+    padding: 3px 14px;
+    font: inherit;
+    cursor: pointer;
+}
+
+#save-btn:hover {
+    background: #0a3d91;
+    color: #fff;
+}
+
+#status {
+    font-size: 12px;
+    color: #555;
+    margin-left: 4px;
+}
+
+#legend {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid #000;
+    padding: 8px 24px;
+    z-index: 100;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 18px;
+    box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.legend-empty {
+    font-size: 12px;
+    color: #888;
+}
+
+.legend-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.legend-item .legend-name:hover {
+    text-decoration: underline;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex: none;
+}
+
+.legend-del {
+    cursor: pointer;
+    color: #999;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0 2px;
+}
+
+.legend-del:hover {
+    color: #000;
+}
+
+.legend-tip {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 8px;
+    background: #fff;
+    border: 1px solid #000;
+    padding: 6px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: nowrap;
+    z-index: 200;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+}
+
+.legend-tip sub,
+.legend-tip sup {
+    font-size: 75%;
+}
+
+.legend-item:hover .legend-tip {
+    display: block;
+}
+
+#plots {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.plot {
+    padding: 8px 12px 4px 12px;
+    background: #fff;
+}
+
+.plot-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.plot h2 {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.plot-head .toggle {
+    font-size: 12px;
+    color: #000;
+    cursor: pointer;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.plot-head .toggle input {
+    accent-color: #0a3d91;
+    cursor: pointer;
+}
+
+.plot canvas {
+    display: block;
+    width: 100%;
+    height: 320px;
+}

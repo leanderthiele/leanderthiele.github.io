@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cosmovis &middot; CMB power spectra</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="controls">
+  <h1>Primary CMB power spectra &mdash;
+    <a href="https://alessiospuriomancini.github.io/cosmopower" target="_blank" rel="noopener">cosmopower</a>
+    emulator
+    <a class="paper-link" href="https://arxiv.org/abs/2106.03846" target="_blank" rel="noopener">[paper]</a>
+  </h1>
+  <div id="sliders"></div>
+  <div id="save-row">
+    <input type="text" id="memo-name" placeholder="memo name&hellip;" />
+    <button id="save-btn">Save</button>
+    <span id="status">Loading emulator&hellip;</span>
+  </div>
+</div>
+
+<div id="plots">
+  <div class="plot">
+    <div class="plot-head">
+      <h2>Temperature &mdash; D<sub>&#8467;</sub><sup>TT</sup></h2>
+      <label class="toggle"><input type="checkbox" id="tt-log" /> log scale</label>
+    </div>
+    <canvas id="canvas-TT"></canvas>
+  </div>
+  <div class="plot">
+    <div class="plot-head">
+      <h2>Temperature &times; E-mode &mdash; D<sub>&#8467;</sub><sup>TE</sup></h2>
+    </div>
+    <canvas id="canvas-TE"></canvas>
+  </div>
+  <div class="plot">
+    <div class="plot-head">
+      <h2>E-mode polarisation &mdash; D<sub>&#8467;</sub><sup>EE</sup></h2>
+    </div>
+    <canvas id="canvas-EE"></canvas>
+  </div>
+</div>
+
+<div id="legend"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
