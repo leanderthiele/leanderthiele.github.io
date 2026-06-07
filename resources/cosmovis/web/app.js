@@ -13,7 +13,7 @@ const PARAMS = [
                                     min: 0.020, max: 0.055, def: 0.0490, step: 0.0001, dps: 4 },
   { key: 'Omega_cdm', label: 'Ω<sub>cdm</sub>',
                                     min: 0.05,  max: 0.30,  def: 0.264,  step: 0.001,  dps: 3 },
-  { key: 'H_0',       label: 'H<sub>0</sub> (km/s/Mpc)',
+  { key: 'H_0',       label: 'H<sub>0</sub>',
                                     min: 50,    max: 85,    def: 67.4,   step: 0.1,    dps: 1 },
   { key: 'tau',       label: 'τ',
                                     min: 0.02,  max: 0.15,  def: 0.054,  step: 0.001,  dps: 3 },
