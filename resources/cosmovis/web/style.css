@@ -67,6 +67,15 @@ body {
     white-space: nowrap;
 }
 
+.reset-label {
+    cursor: pointer;
+    user-select: none;
+}
+
+.reset-label:hover {
+    color: #0a3d91;
+}
+
 .slider-row input[type="range"] {
     width: 100%;
     accent-color: #0a3d91;  /* matches our blue */

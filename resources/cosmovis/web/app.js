@@ -35,6 +35,8 @@ function buildSliders() {
 
     const label = document.createElement('label');
     label.innerHTML = p.label;
+    label.classList.add('reset-label');
+    label.title = 'click to reset to default';
 
     const range = document.createElement('input');
     range.type = 'range';
@@ -60,6 +62,12 @@ function buildSliders() {
       v = Math.max(p.min, Math.min(p.max, v));
       number.value = formatVal(v, p);
       range.value = String(v);
+      schedule();
+    });
+
+    label.addEventListener('click', () => {
+      range.value = String(p.def);
+      number.value = formatVal(p.def, p);
       schedule();
     });
 
