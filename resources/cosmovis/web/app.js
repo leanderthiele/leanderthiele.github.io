@@ -1,6 +1,7 @@
 // Top-level page logic: build sliders, drive the emulator, paint the plots.
 
 import { CosmoEmulator } from './cosmo_emu.mjs';
+import { SkyMap } from './skymap.mjs';
 
 // ---- parameter definitions ----------------------------------------------
 // Slider ranges are chosen as a fixed Cartesian sub-box of the cosmopower
@@ -89,12 +90,44 @@ const emu = new CosmoEmulator({ baseUrl: './' });
 
 let scheduled = false;
 function schedule() {
+  setSkyComputed(false);   // params changed -> map is now stale
   if (scheduled) return;
   scheduled = true;
   requestAnimationFrame(() => { scheduled = false; redraw(); });
 }
 
 const plots = {};
+let skymap = null;
+let skyBtn = null;
+
+// Grey out the "Compute map" button while the displayed map already matches
+// the current parameters; re-enable it whenever a parameter changes.
+function setSkyComputed(done) {
+  if (skyBtn) skyBtn.disabled = done;
+}
+
+// TT C_ell (microK^2) indexed by ell, for the sky-map synthesis.
+function ttClByEll(lmax) {
+  const out = emu.predict(currentParams());
+  const arr = new Float64Array(lmax + 1);
+  const ell = out.ell, TT = out.TT;
+  for (let i = 0; i < ell.length; i++) {
+    const l = ell[i];
+    if (l >= 2 && l <= lmax) arr[l] = TT[i] * TCMB2;
+  }
+  return arr;
+}
+
+// Fixed phase seed: the a_lm random phases stay constant across recomputes,
+// so the map morphs cleanly with the cosmological parameters rather than
+// being scrambled by a fresh realization each time.
+const SKY_SEED = 0x5eed1234;
+
+function renderSky() {
+  if (!skymap) return;
+  const lmax = parseInt(document.getElementById('skymap-lmax').value, 10);
+  skymap.render(ttClByEll(lmax), lmax, SKY_SEED);
+}
 
 function currentParams() {
   const params = {};
@@ -111,6 +144,7 @@ function applyParams(params) {
     ui[p.key].range.value = String(v);
     ui[p.key].number.value = formatVal(v, p);
   }
+  setSkyComputed(false);   // params changed -> map is now stale
   redraw();
 }
 
@@ -584,6 +618,24 @@ async function main() {
   const ttLog = document.getElementById('tt-log');
   ttLog.addEventListener('change', () => { plots.TT.setLog(ttLog.checked); plots.TT.redraw(); });
 
+  // sky-map realization controls
+  skymap = new SkyMap(document.getElementById('canvas-sky'), emu);
+  skyBtn = document.getElementById('skymap-roll');
+  const lmaxSel = document.getElementById('skymap-lmax');
+  const doRoll = () => {
+    skyBtn.disabled = true;
+    skyBtn.textContent = 'computing…';
+    // yield so the button repaint lands before the synchronous synthesis
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      renderSky();
+      skyBtn.textContent = 'Compute map';
+      setSkyComputed(true);   // stays greyed until a parameter changes
+    }));
+  };
+  skyBtn.addEventListener('click', doRoll);
+  // changing lmax makes the map stale; the user re-runs with "Compute map"
+  lmaxSel.addEventListener('change', () => setSkyComputed(false));
+
   try {
     await emu.init();
   } catch (e) {
@@ -598,6 +650,8 @@ async function main() {
   addEntry('default', '#000000', defaults);   // also triggers first redraw
 
   statusEl.textContent = '';
+  renderSky();              // initial realization at default parameters
+  setSkyComputed(true);     // map matches current params -> button greyed
   adjustPadding();
   window.addEventListener('resize', adjustPadding);
 }

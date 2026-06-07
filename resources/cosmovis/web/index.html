@@ -42,6 +42,23 @@
     </div>
     <canvas id="canvas-EE"></canvas>
   </div>
+  <div class="plot" id="skymap-plot">
+    <div class="plot-head">
+      <h2>Temperature sky &mdash; Gaussian realization (Mollweide)</h2>
+      <div class="skymap-ctrls">
+        <label class="toggle">&#8467;<sub>max</sub>
+          <select id="skymap-lmax">
+            <option value="128">128</option>
+            <option value="256" selected>256</option>
+            <option value="384">384</option>
+            <option value="512">512</option>
+          </select>
+        </label>
+        <button id="skymap-roll">Compute map</button>
+      </div>
+    </div>
+    <canvas id="canvas-sky"></canvas>
+  </div>
 </div>
 
 <div id="legend"></div>

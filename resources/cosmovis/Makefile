@@ -12,7 +12,7 @@ EMCC_FLAGS := -O3 \
     -s ENVIRONMENT=web,worker,node \
     -s ALLOW_MEMORY_GROWTH=1 \
     -s INITIAL_MEMORY=16MB \
-    -s EXPORTED_FUNCTIONS='["_cp_load","_cp_predict","_cp_free","_cp_malloc","_cp_mfree","_cp_n_outputs","_cp_output_kind","_cp_ell_min","_cp_ell_max","_cp_n_inputs"]' \
+    -s EXPORTED_FUNCTIONS='["_cp_load","_cp_predict","_cp_free","_cp_malloc","_cp_mfree","_cp_n_outputs","_cp_output_kind","_cp_ell_min","_cp_ell_max","_cp_n_inputs","_sht_synth"]' \
     -s EXPORTED_RUNTIME_METHODS='["HEAPU8","HEAPF32","HEAP32"]'
 
 .PHONY: all build weights wasm verify serve clean

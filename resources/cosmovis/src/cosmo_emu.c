@@ -226,3 +226,183 @@ EMSCRIPTEN_KEEPALIVE void cp_predict(int handle, int params_ptr, int out_ptr) {
         }
     }
 }
+
+// ===========================================================================
+// Spherical-harmonic synthesis (synfast / HEALPix alm2map style)
+// ===========================================================================
+// Draw a Gaussian random realization of a real scalar field from an angular
+// power spectrum C_ell and synthesize it onto an equirectangular (theta,phi)
+// grid using the iso-latitude-ring algorithm: one Legendre transform per
+// colatitude ring -> F_m(theta) = sum_ell a_lm Pbar_lm(theta), followed by an
+// FFT over phi. The JS side reprojects the grid onto a Mollweide image.
+//
+// Grid layout (row-major, ntheta x nphi):
+//   row i  -> colatitude theta_i = pi * (i + 0.5) / ntheta
+//   col j  -> longitude  phi_j   = 2*pi * j / nphi
+// Requirements: nphi is a power of two and nphi > 2*lmax.
+//
+// Conventions: Pbar_lm are fully-normalized associated Legendre functions, so
+// Y_lm = Pbar_lm(cos theta) e^{i m phi} with int |Y_lm|^2 dOmega = 1, and
+// <|a_lm|^2> = C_ell. Monopole/dipole (ell<2) are set to zero.
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+#define SHT_INV_SQRT_4PI 0.28209479177387814  // 1/sqrt(4 pi)
+#define SHT_SQRT_HALF    0.70710678118654752   // 1/sqrt(2)
+#define SHT_TWO_PI       6.28318530717958648
+
+// --- tiny PRNG (xorshift32) + Box-Muller gaussian --------------------------
+static uint32_t g_rng;
+static double   g_gauss_spare;
+static int      g_gauss_has;
+
+static inline uint32_t xorshift32(void) {
+    uint32_t x = g_rng;
+    x ^= x << 13; x ^= x >> 17; x ^= x << 5;
+    g_rng = x;
+    return x;
+}
+static inline double rng_uniform(void) {
+    return ((double)xorshift32() + 0.5) * (1.0 / 4294967296.0);
+}
+static double rng_gauss(void) {
+    if (g_gauss_has) { g_gauss_has = 0; return g_gauss_spare; }
+    double u1 = rng_uniform(), u2 = rng_uniform();
+    double r = sqrt(-2.0 * log(u1)), t = SHT_TWO_PI * u2;
+    g_gauss_spare = r * sin(t);
+    g_gauss_has = 1;
+    return r * cos(t);
+}
+
+// --- in-place iterative radix-2 FFT, exp(+i...) (inverse / synthesis) -------
+// tw[k] = exp(+i 2*pi*k/n) for k in [0, n/2).
+static void fft_pow2(double* re, double* im, int n,
+                     const double* tw_re, const double* tw_im) {
+    for (int i = 1, j = 0; i < n; i++) {
+        int bit = n >> 1;
+        for (; j & bit; bit >>= 1) j ^= bit;
+        j ^= bit;
+        if (i < j) {
+            double tr = re[i]; re[i] = re[j]; re[j] = tr;
+            double ti = im[i]; im[i] = im[j]; im[j] = ti;
+        }
+    }
+    for (int len = 2; len <= n; len <<= 1) {
+        int half = len >> 1, step = n / len;
+        for (int i = 0; i < n; i += len) {
+            int k = 0;
+            for (int a = i; a < i + half; a++) {
+                int b = a + half;
+                double wr = tw_re[k], wi = tw_im[k];
+                double xr = re[b] * wr - im[b] * wi;
+                double xi = re[b] * wi + im[b] * wr;
+                re[b] = re[a] - xr; im[b] = im[a] - xi;
+                re[a] += xr;        im[a] += xi;
+                k += step;
+            }
+        }
+    }
+}
+
+// cl_ptr : float[lmax+1], C_ell in physical units^2 (ell<2 ignored)
+// grid_ptr: float[ntheta*nphi] output, row-major
+EMSCRIPTEN_KEEPALIVE
+void sht_synth(int cl_ptr, int lmax, int ntheta, int nphi, int seed, int grid_ptr) {
+    const float* cl  = (const float*)(uintptr_t)cl_ptr;
+    float*       grid = (float*)(uintptr_t)grid_ptr;
+    int L = lmax;
+
+    g_rng = seed ? (uint32_t)seed : 0x9e3779b9u;
+    g_gauss_has = 0;
+
+    size_t ntri = (size_t)(L + 1) * (L + 2) / 2;
+
+    // triangular offset of block m (entries for ell = m..L)
+    int* off = (int*)malloc((size_t)(L + 1) * sizeof(int));
+    for (int m = 0, acc = 0; m <= L; m++) { off[m] = acc; acc += (L - m + 1); }
+
+    // Legendre ell-recurrence coefficients (theta-independent, computed once):
+    //   Pbar_lm = A_lm * x * Pbar_{l-1,m} - B_lm * Pbar_{l-2,m}   (l >= m+2)
+    double* A = (double*)malloc(ntri * sizeof(double));
+    double* B = (double*)malloc(ntri * sizeof(double));
+    for (int m = 0; m <= L; m++) {
+        int o = off[m];
+        for (int l = m; l <= L; l++) {
+            int t = l - m;
+            if (l >= m + 2) {
+                A[o + t] = sqrt(((2.0*l + 1.0) * (2.0*l - 1.0)) /
+                                ((double)(l - m) * (l + m)));
+                B[o + t] = sqrt(((2.0*l + 1.0) * (l + m - 1.0) * (l - m - 1.0)) /
+                                ((2.0*l - 3.0) * (l - m) * (l + m)));
+            } else { A[o + t] = 0.0; B[o + t] = 0.0; }
+        }
+    }
+
+    // a_lm (m >= 0; reality fixes m < 0). m=0 real; m>0 complex, var split.
+    double* ar = (double*)calloc(ntri, sizeof(double));
+    double* ai = (double*)calloc(ntri, sizeof(double));
+    for (int l = 2; l <= L; l++) {
+        double s = (cl[l] > 0.0f) ? sqrt((double)cl[l]) : 0.0;
+        double inv = s * SHT_SQRT_HALF;
+        ar[off[0] + l] = s * rng_gauss();           // a_l0 real
+        for (int m = 1; m <= l; m++) {
+            ar[off[m] + (l - m)] = inv * rng_gauss();
+            ai[off[m] + (l - m)] = inv * rng_gauss();
+        }
+    }
+
+    // twiddles for the phi FFT
+    int nh = nphi >> 1;
+    double* twr = (double*)malloc((size_t)nh * sizeof(double));
+    double* twi = (double*)malloc((size_t)nh * sizeof(double));
+    for (int k = 0; k < nh; k++) {
+        double ang = SHT_TWO_PI * k / nphi;
+        twr[k] = cos(ang); twi[k] = sin(ang);
+    }
+
+    double* Fr = (double*)malloc((size_t)(L + 1) * sizeof(double));
+    double* Fi = (double*)malloc((size_t)(L + 1) * sizeof(double));
+    double* re = (double*)malloc((size_t)nphi * sizeof(double));
+    double* im = (double*)malloc((size_t)nphi * sizeof(double));
+
+    for (int i = 0; i < ntheta; i++) {
+        double theta = M_PI * (i + 0.5) / ntheta;
+        double x = cos(theta), sth = sin(theta);
+
+        // per-ring Legendre transform: F_m = sum_{l>=m} a_lm Pbar_lm(theta)
+        double pmm = SHT_INV_SQRT_4PI;   // Pbar_00
+        for (int m = 0; m <= L; m++) {
+            if (m > 0) pmm *= sqrt((2.0*m + 1.0) / (2.0*m)) * sth;  // Pbar_mm
+            const double* Ar = ar + off[m]; const double* Ai = ai + off[m];
+            const double* Am = A  + off[m]; const double* Bm = B  + off[m];
+            double fr = 0.0, fi = 0.0;
+            double p0 = pmm;                       // l = m
+            fr += Ar[0] * p0; fi += Ai[0] * p0;
+            if (m + 1 <= L) {
+                double p1 = sqrt(2.0*m + 3.0) * x * pmm;   // l = m+1
+                fr += Ar[1] * p1; fi += Ai[1] * p1;
+                for (int l = m + 2; l <= L; l++) {
+                    int t = l - m;
+                    double p = Am[t] * x * p1 - Bm[t] * p0;
+                    fr += Ar[t] * p; fi += Ai[t] * p;
+                    p0 = p1; p1 = p;
+                }
+            }
+            Fr[m] = fr; Fi[m] = fi;
+        }
+
+        // assemble half-spectrum X[m] = (m?2:1)*F_m, then inverse FFT over phi.
+        // The real field is Re(inverse FFT); the Hermitian partner is discarded.
+        for (int k = 0; k < nphi; k++) { re[k] = 0.0; im[k] = 0.0; }
+        re[0] = Fr[0]; im[0] = Fi[0];
+        for (int m = 1; m <= L; m++) { re[m] = 2.0 * Fr[m]; im[m] = 2.0 * Fi[m]; }
+        fft_pow2(re, im, nphi, twr, twi);
+
+        float* row = grid + (size_t)i * nphi;
+        for (int j = 0; j < nphi; j++) row[j] = (float)re[j];
+    }
+
+    free(off); free(A); free(B); free(ar); free(ai);
+    free(twr); free(twi); free(Fr); free(Fi); free(re); free(im);
+}
