@@ -17,7 +17,7 @@ EMCC_FLAGS := -O3 \
 
 .PHONY: all build weights wasm verify serve clean
 
-all: build
+all: wasm
 
 build: weights wasm
 
