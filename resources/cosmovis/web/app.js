@@ -352,6 +352,11 @@ class SpectrumPlot {
     for (const { v, major } of yTicks) {
       const py = y2px(v);
       if (py < padT - 0.5 || py > padT + plotH + 0.5) continue;
+      if (major && py > padT + 0.5 && py < padT + plotH - 0.5) {
+        ctx.strokeStyle = '#eee';
+        ctx.beginPath(); ctx.moveTo(padL, py); ctx.lineTo(padL + plotW, py); ctx.stroke();
+        ctx.strokeStyle = '#000';
+      }
       ctx.beginPath(); ctx.moveTo(padL - (major ? 4 : 2.5), py); ctx.lineTo(padL, py); ctx.stroke();
       if (major) drawRich(ctx, tickSegments(v), padL - 7, py, 'right');
     }
@@ -364,6 +369,12 @@ class SpectrumPlot {
       .filter((l) => l >= xMin && l <= xMax);
     for (const l of xTicks) {
       const px = x2px(l);
+      // faint vertical grid line (skip the box edges and the L_SPLIT divider)
+      if (l !== L_SPLIT && px > padL + 0.5 && px < padL + plotW - 0.5) {
+        ctx.strokeStyle = '#eee';
+        ctx.beginPath(); ctx.moveTo(px, padT); ctx.lineTo(px, padT + plotH); ctx.stroke();
+        ctx.strokeStyle = '#000';
+      }
       ctx.beginPath(); ctx.moveTo(px, padT + plotH); ctx.lineTo(px, padT + plotH + 4); ctx.stroke();
       ctx.fillText(String(l), px, padT + plotH + 6);
     }
