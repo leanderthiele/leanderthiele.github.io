@@ -1,16 +1,20 @@
 // CosmoEmulator: loads the WASM kernel + 3 weight .bin files (TT, TE, EE)
-// and exposes a single predict({Omega_b, Omega_cdm, H_0, tau, n_s, A_s}).
+// and exposes a single predict({omega_b, omega_m, H_0, tau, n_s, A_s}).
 //
 // The HTML page only ever talks to this class. WASM memory is allocated
 // once at init time; predict() writes into those buffers in place.
 //
 // User parameterisation (sliders)   ->   cosmopower parameterisation (NN input)
-//   Omega_b   ->   omega_b   = Omega_b   * h^2
-//   Omega_cdm ->   omega_cdm = Omega_cdm * h^2
+//   omega_b   ->   omega_b   = omega_b                       (physical baryon density)
+//   omega_m   ->   omega_cdm = omega_m - omega_b - omega_nu  (physical matter density)
 //   H_0       ->   h         = H_0 / 100
 //   tau       ->   tau_reio  = tau
 //   n_s       ->   n_s       = n_s
 //   A_s       ->   ln10^10A_s = ln(1e10 * A_s)
+//
+// omega_m is the total physical matter density; the emulator's CDM input is
+// recovered by subtracting the baryons and the (fixed) single massive
+// neutrino used in the CP_paper training, omega_nu = 0.06 eV / 93.14 eV.
 
 import CosmoEmuModule from './cosmo_emu.js';
 
@@ -78,15 +82,16 @@ export class CosmoEmulator {
 
   // Pack the 6 user-facing params into the cosmopower-native vector in
   // the WASM heap. Returns nothing.
-  _packParams({ Omega_b, Omega_cdm, H_0, tau, n_s, A_s }) {
+  _packParams({ omega_b, omega_m, H_0, tau, n_s, A_s }) {
     const h = H_0 / 100;
+    const OMEGA_NU = 0.000644;                       // fixed 0.06 eV neutrino
     const inView = new Float32Array(this.wasm.HEAPF32.buffer, this.inPtr, 6);
-    inView[0] = Omega_b   * h * h;        // omega_b
-    inView[1] = Omega_cdm * h * h;        // omega_cdm
-    inView[2] = h;                        // h
-    inView[3] = tau;                      // tau_reio
-    inView[4] = n_s;                      // n_s
-    inView[5] = Math.log(1e10 * A_s);     // ln(1e10 A_s)
+    inView[0] = omega_b;                             // omega_b
+    inView[1] = omega_m - omega_b - OMEGA_NU;        // omega_cdm
+    inView[2] = h;                                   // h
+    inView[3] = tau;                                 // tau_reio
+    inView[4] = n_s;                                 // n_s
+    inView[5] = Math.log(1e10 * A_s);                // ln(1e10 A_s)
   }
 
   // Run all 3 spectra. Returns { ell, TT, TE, EE } where each spectrum

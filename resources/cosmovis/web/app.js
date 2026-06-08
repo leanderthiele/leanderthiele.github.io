@@ -10,10 +10,10 @@ import { SkyMap } from './skymap.mjs';
 // overall spectrum amplitude only varies modestly and the fixed y-axes stay
 // nicely framed (the line moves, the axis does not).
 const PARAMS = [
-  { key: 'Omega_b',   label: 'Ω<sub>b</sub>',
-                                    min: 0.020, max: 0.055, def: 0.0490, step: 0.0001, dps: 4 },
-  { key: 'Omega_cdm', label: 'Ω<sub>cdm</sub>',
-                                    min: 0.05,  max: 0.30,  def: 0.264,  step: 0.001,  dps: 3 },
+  { key: 'omega_b',   label: 'ω<sub>b</sub>',
+                                    min: 0.018, max: 0.026, def: 0.0224, step: 0.0001, dps: 4 },
+  { key: 'omega_m',   label: 'ω<sub>m</sub>',
+                                    min: 0.10,  max: 0.20,  def: 0.143,  step: 0.001,  dps: 3 },
   { key: 'H_0',       label: 'H<sub>0</sub>',
                                     min: 50,    max: 85,    def: 67.4,   step: 0.1,    dps: 1 },
   { key: 'tau',       label: 'τ',
@@ -265,8 +265,8 @@ class SpectrumPlot {
   finalize() {
     // Tighten the corner-sampled extremes so the default spectra fill the
     // frame; extreme slider combos may clip slightly at the edge.
-    // (0.7 once, then another 30% -> 0.7*0.7.)
-    const SHRINK = 0.49;
+    // (0.7 once, then another 30% -> 0.7*0.7 = 0.49, then +50% headroom.)
+    const SHRINK = 0.49 * 1.5;
     // linear range, padded; include 0 always so the baseline is visible
     let lo = Math.min(0, this.dMin) * SHRINK, hi = Math.max(0, this.dMax) * SHRINK;
     const pad = (hi - lo) * 0.05 || 1;
