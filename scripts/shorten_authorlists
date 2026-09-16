@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+
+import re
+
+infile='tex/publications.src.tex'
+outfile='tex/publications.tex'
+
+MAX_AUTHORS = 10
+LIST_AUTHORS = 5 # how many we include if MAX_AUTHORS exceeded (note there is some interaction with the position counting in make_publications, DO NOT set to below 4)
+
+def clean (line) :
+
+    # shorten first names if necessary
+    # (note that names beginning with special characters are fine!)
+    # TODO deal with other special characters
+    line = re.sub(r'([A-Z])[a-z\';~\\]* ', r'\1. ', line)
+
+    # deal with multiple first names
+    line = re.sub(r'([A-Z])\. ([\';~\\]?[A-Z])\.', r'\1.\2.', line)
+
+    # shorten list if necessary
+    if line.count(',') > MAX_AUTHORS :
+        line = ', '.join(line.split(', ')[:LIST_AUTHORS]) + r', et al.'
+        line += r' (incl. {\bf L. Thiele}), ' if 'L. Thiele' not in line else r', '
+
+    # highlight me if necessary
+    # (note the comma deals with the case in which it's already done)
+    line = line.replace(r'L. Thiele,', r'{\bf L. Thiele},')
+
+    return line
+
+with open(infile, 'r') as fin, open(outfile, 'w') as fout :
+
+    authorline = False
+
+    for line in fin :
+
+        fout.write(clean(line) if authorline else line)
+        authorline = line.startswith(r'\begin{minipage}')

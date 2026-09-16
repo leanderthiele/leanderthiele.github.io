@@ -52,7 +52,7 @@ replace_tag "$outfile" '<em>' '<em class="paper">'
 # make names not break
 # we identify names by containing only letters and dots,
 # then a comma
-sed -i 's@\([^\,^<^>^0-9]\+\)\,@ <span class="authorname">\1</span>,@g' "$outfile"
+sed -i 's@\([^\,^<^>^0-9^)^(]\+\)\,@ <span class="authorname">\1</span>,@g' "$outfile"
 
 # special treatment for me
 replace_tag "$outfile" '<strong>L. Thiele</strong>' "$my_name"

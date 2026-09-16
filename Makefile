@@ -3,6 +3,9 @@ all: data/cv.pdf data/publist.pdf data/bg.jpg index.html cv.html code.html teach
 tex/citations.tex: scripts/make_citations_tex scripts/download_citations ALWAYS
 	./scripts/make_citations_tex
 
+tex/publications.tex: tex/publications.src.tex scripts/shorten_authorlists
+	./scripts/shorten_authorlists
+
 data/cv.pdf: tex/cv.tex tex/employment.tex tex/education.tex tex/publications.tex tex/talks.tex tex/teaching.tex tex/advising.tex tex/service.tex tex/honors.tex tex/funding.tex tex/res.cls tex/citations.tex scripts/make_cv
 	./scripts/make_cv ''
 
