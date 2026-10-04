@@ -15,6 +15,7 @@ pages=(
        'CV@cv.html'
        'Codes@code.html'
        'Teaching@teaching1.html'
+       'About@about.html'
       )
 
 # these are html snippets which we have to copy into the above files

@@ -1,4 +1,4 @@
-all: data/cv.pdf data/publist.pdf data/bg.jpg index.html cv.html code.html teaching1.html cosmovis
+all: data/cv.pdf data/publist.pdf data/bg.jpg index.html cv.html code.html teaching1.html about.html cosmovis
 
 tex/citations.tex: scripts/make_citations_tex scripts/download_citations ALWAYS
 	./scripts/make_citations_tex
@@ -53,6 +53,9 @@ code.html: src/template.html src/code.src.html scripts/make_html
 
 teaching1.html: src/template.html src/teaching1.src.html scripts/make_html
 	./scripts/make_html 'teaching1.html'
+
+about.html: src/template.html src/about.src.html scripts/make_html
+	./scripts/make_html 'about.html'
 
 data/bg.jpg: data/TNG300_projected_DM.npy data/TNG300_projected_PE.npy scripts/make_background
 	./scripts/make_background
